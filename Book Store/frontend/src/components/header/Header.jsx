@@ -10,7 +10,7 @@ const Header = () => {
         Online Bookstore
       </h1>
       <nav className=" text-white font-semibold p-3 mb-3 text-sm flex justify-end">
-        <ul clas>
+        <ul className="flex gap-4">
           <li>
             <Link to="/">
               <FontAwesomeIcon icon={faBook} /> Book List
