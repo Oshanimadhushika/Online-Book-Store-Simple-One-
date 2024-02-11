@@ -1,5 +1,3 @@
-
-
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -11,6 +9,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const BookList = () => {
   const [books, setBooks] = useState([]);
@@ -20,11 +19,21 @@ const BookList = () => {
   const [description, setDescription] = useState();
   const [price, setPrice] = useState();
   const [amount, setAmount] = useState();
-  
+
   const navigate = useNavigate();
 
-  const handleAddToDetail = (book_id) => {
-    axios.get(`http://localhost:3500/api/v1/getBook/${book_id}`)
+  const handleAddToDetail = (
+    _id,
+    book_id,
+    title,
+    author,
+    description,
+    price,
+    amount
+  ) => {
+    console.log("idd in book list", book_id);
+    axios
+      .get(`http://localhost:3500/api/v1/getBook/` + _id)
       .then((response) => {
         const bookDetails = {
           title: response.data.title,
@@ -33,34 +42,13 @@ const BookList = () => {
           price: response.data.price,
           amount: response.data.amount,
         };
-  
+
         localStorage.setItem("bookDetails", JSON.stringify(bookDetails));
-        navigate(`/detail/${book_id}`);
       })
       .catch((error) => {
         console.error("Error fetching book details:", error);
       });
   };
-  
-
-  // const handleAddToDetail = (book_id, title, author, description, price, amount) => {
-  //   const bookDetails = {
-  //     book_id,
-  //     title,
-  //     author,
-  //     description,
-  //     price,
-  //     amount
-  //   };
-
-  //   localStorage.setItem("bookDetails", JSON.stringify(bookDetails));
-  //   navigate(`/detail/${book_id}`);
-  // };
-
-  // const handleAddToDetail = (book) => {
-  //   localStorage.setItem("bookDetails", JSON.stringify(book));
-  //   navigate(`/detail/${book.book_id}`);
-  // };
 
   useEffect(() => {
     axios
@@ -95,16 +83,31 @@ const BookList = () => {
               alt="book_img"
             />
             <CardContent style={{ border: 1 }}>
-            <Typography gutterBottom variant="h5" component="div" value={book_id}
-          onChange={(e) => setBookId(e.target.value)}>
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="div"
+                value={book_id}
+                onChange={(e) => setBookId(e.target.value)}
+              >
                 {book.book_id}
               </Typography>
-              <Typography gutterBottom variant="h5" component="div" value={title}
-          onChange={(e) => setTitle(e.target.value)}>
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="div"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              >
                 {book.title}
               </Typography>
-              <Typography gutterBottom variant="h5" component="div" value={author}
-          onChange={(e) => setAuthor(e.target.value)}>
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="div"
+                value={author}
+                onChange={(e) => setAuthor(e.target.value)}
+              >
                 {book.author}
               </Typography>
 
@@ -115,7 +118,7 @@ const BookList = () => {
                 type="submit"
                 variant="contained"
                 onClick={() => {
-                  let book_id = book.book_id;
+                  let _id = book.book_id;
                   let title = book.title;
                   let author = book.author;
                   let description = book.description;
@@ -129,19 +132,17 @@ const BookList = () => {
                   setPrice(price);
                   setAmount(amount);
 
-                  // handleAddToDetail(
-                  //   book_id,
-                  //   title,
-                  //   author,
-                  //   description,
-                  //   price,
-                  //   amount
-                  // );
-                  handleAddToDetail(book_id)
+                  handleAddToDetail(
+                    _id,
+                    title,
+                    author,
+                    description,
+                    price,
+                    amount
+                  );
                 }}
               >
-                {" "}
-                Details{" "}
+                <Link to={`/detail/${book._id}`}>Details</Link>
               </button>
             </CardContent>
           </CardActionArea>
@@ -152,4 +153,3 @@ const BookList = () => {
 };
 
 export default BookList;
-
